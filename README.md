@@ -6,59 +6,77 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+## Introduction
 
-## About Laravel
+trello is a laravel api to mpowers your team to manage any type of project and task tracking . This api is help you to add project and to add employees to your project and add taska and assign the task to the employee you added it is helpfull to manage your team and tells you what's being worked on, who's working on what.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Resources you might need
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+https://laravel.com/docs/9.x
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+-   Run Docker application first
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Prerequisites
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   PHP 8.0 or above
+-   Composer
+-   Xamp/Wamp for any such application for apace,nginx,mysql
+-   PHP plugins you must need
 
-## Laravel Sponsors
+-   Rename .env.example file to .env and provide necessary credentials. Like database credentials
+    -   Specially check for this `env` variables
+    ```
+    DB_HOST=localhost
+    DB_DATABASE=trello
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
+-   Run `composer install`
+-   run `php artisan key:generate`
+-   run `php artisan migrate --seed` to run the seeder data to your database
+-   run `php artisan serve`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Development
 
-### Premium Partners
+-   I have provided RESTfull api.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## REST API
 
-## Contributing
+All the rest routes is resides in `trello/Routes/api.php` file and you can easily navigate to corresponding controller and necessary files.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Endpoints Details
 
-## Code of Conduct
+-   **[projects](<[https://documenter.getpostman.com/view/11693148/TVzUDbnG](https://documenter.getpostman.com/view/20146944/VUxLwU3x#049d77a9-7340-423c-a530-56c1952e467b)>)**
+-   **[auths](<[https://documenter.getpostman.com/view/20146944/VUxLwU3x#30e13b3f-1503-4ed4-8a90-02635e531a65](https://documenter.getpostman.com/view/20146944/VUxLwU3x#30e13b3f-1503-4ed4-8a90-02635e531a65)>)**
+-   **[task](<[https://documenter.getpostman.com/view/11693148/TVzUDbUa](https://documenter.getpostman.com/view/20146944/VUxLwU3x#1b056d7a-09a6-4f9d-b6a3-7a6da8fa271c)>)**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### config
 
-## Security Vulnerabilities
+The `config` folder contains all the `config` for the app.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### database
 
-## License
+The `/database` folder contains all the `factories` , `migrations` and seeders.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   #### Http:
+
+    Contains two folders. `Controllers` and `Requests`. All the necessary controllers and requests are in this two folder.
+
+-   #### Database:
+    Contains `Models` .for database models.
+
+## FAQ
+
+### Changing .env files but not getting the changes
+
+Run Below command `php artisan optimize:clear`
+
+### Why am I getting "The GET method is not supported for this route. Supported methods: HEAD"?
+
+Run `php artisan optimize:clear`
+
+### The GET method is not supported for this route. Supported methods: POST. in file /Illuminate/Routing/AbstractRouteCollection.php on line 118
+
+make sure you write the token you get in login inthe token bearer

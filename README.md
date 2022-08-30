@@ -6,7 +6,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
-## Introduction
+### Introduction
 
 trello is a laravel api to mpowers your team to manage any type of project and task tracking . This api is help you to add project and to add employees to your project and add taska and assign the task to the employee you added it is helpfull to manage your team and tells you what's being worked on, who's working on what.
 
@@ -48,9 +48,9 @@ All the rest routes is resides in `trello/Routes/api.php` file and you can easil
 
 ### Endpoints Details
 
--   **[projects](<[https://documenter.getpostman.com/view/11693148/TVzUDbnG](https://documenter.getpostman.com/view/20146944/VUxLwU3x#049d77a9-7340-423c-a530-56c1952e467b)>)**
--   **[auths](<[https://documenter.getpostman.com/view/20146944/VUxLwU3x#30e13b3f-1503-4ed4-8a90-02635e531a65](https://documenter.getpostman.com/view/20146944/VUxLwU3x#30e13b3f-1503-4ed4-8a90-02635e531a65)>)**
--   **[task](<[https://documenter.getpostman.com/view/11693148/TVzUDbUa](https://documenter.getpostman.com/view/20146944/VUxLwU3x#1b056d7a-09a6-4f9d-b6a3-7a6da8fa271c)>)**
+-   **[projects](https://documenter.getpostman.com/view/20146944/VUxLwU3x#049d77a9-7340-423c-a530-56c1952e467b)**
+-   **[auths](https://documenter.getpostman.com/view/20146944/VUxLwU3x#30e13b3f-1503-4ed4-8a90-02635e531a65)**
+-   **[task](https://documenter.getpostman.com/view/20146944/VUxLwU3x#1b056d7a-09a6-4f9d-b6a3-7a6da8fa271c)**
 
 ### config
 

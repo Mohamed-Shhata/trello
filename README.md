@@ -6,11 +6,13 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+
+
 ### Introduction
 
 trello is a laravel api to mpowers your team to manage any type of project and task tracking . This api is help you to add project and to add employees to your project and add taska and assign the task to the employee you added it is helpfull to manage your team and tells you what's being worked on, who's working on what.
 
-### Resources you might need
+## Resources you might need
 
 https://laravel.com/docs/9.x
 

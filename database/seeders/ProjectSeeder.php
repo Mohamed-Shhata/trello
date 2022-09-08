@@ -13,7 +13,7 @@ class ProjectSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Project::factory()->count(20)->create();
     }

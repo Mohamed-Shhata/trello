@@ -8,37 +8,47 @@ use App\Http\Requests\UpdateProjectRequest;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the projects to user who logged in.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return mixed
      */
-    public function index(Request $request)
+    public function index(Request $request): mixed
     {
+//        $projects = Project::with('tasks')->get();
+//        return response()->json([
+//            'status' => true,
+//            'message' => "Post Created successfully!",
+//             'project' => $projects->pluck("tasks",'id'),
+//        ], 200);
         return Project::where('supervisorId', auth()->id())->get();
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create()
-    {
-        //
-    }
+//    public function create()
+//    {
+//        //
+//    }
 
     /**
      * Store a newly created project in storage.
      *
-     * @param  \App\Http\Requests\StoreProjectRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreProjectRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request): JsonResponse
     {
         $Project = Project::create([
             'name' => $request->name,
@@ -51,17 +61,16 @@ class ProjectController extends Controller
             'status' => true,
             'message' => "Post Created successfully!",
             'project' => $Project,
-            'requist' => $request->name
         ], 200);
     }
 
     /**
      * Display the specified project to user who logged in.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return Project|JsonResponse
      */
-    public function show(Project $project)
+    public function show(Project $project): Project|JsonResponse
     {
         if (!($project->supervisorId == auth()->id())) {
             return response()->json([
@@ -76,27 +85,27 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return Response
      */
-    public function edit(Project $project)
-    {
-        //
-    }
+//    public function edit(Project $project)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified project in storage.
      *
-     * @param  \App\Http\Requests\UpdateProjectRequest  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param UpdateProjectRequest $request
+     * @param Project $project
+     * @return JsonResponse
      */
-    public function update(UpdateProjectRequest $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
         if (!($project->supervisorId == auth()->id())) {
             return response()->json([
                 'status' => False,
-                'message' => "permission is dennied",
+                'message' => "permission is denied",
             ], 403);
         } else {
             $project->update($request->all());
@@ -112,18 +121,18 @@ class ProjectController extends Controller
     /**
      * Remove the specified project but all tasks in it must be completed from storage.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @return JsonResponse
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project): JsonResponse
     {
         if (!($project->supervisorId == auth()->id())) {
             return response()->json([
                 'status' => False,
-                'message' => "permission is dennied",
+                'message' => "permission is denied",
             ], 403);
         } else {
-            if (count(Task::where('projectId', $project->id)->where('isCompleted', 1)->get()) != 0) {
+            if (count(Task::where('project_id', $project->id)->where('isCompleted', 1)->get()) != 0) {
                 $project->delete();
                 return response()->json([
                     'status' => true,

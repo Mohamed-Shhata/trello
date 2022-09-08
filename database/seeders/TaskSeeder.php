@@ -16,13 +16,13 @@ class TaskSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Task::factory()->count(40)->create();
         $tasks = Task::all();
         foreach ($tasks as $task) {
             // $output = new OutputConsoleOutput();
-            $projectSupervisorId = Project::where('id', $task->projectId)->pluck('supervisorId')->first();
+            $projectSupervisorId = Project::where('id', $task->project_id)->pluck('supervisorId')->first();
 
             $employeeId = User::where('supervisorId', $projectSupervisorId)->pluck('id');
 

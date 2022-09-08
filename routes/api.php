@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
-    //user authintication
+    //user authentication
     Route::post('/auth/register', [AuthController::class, 'createUser']);
     Route::post('/auth/login', [AuthController::class, 'loginUser'])->name('login');
     Route::get('/auth/logout', [AuthController::class, 'logoutUser'])->name('logout')->middleware('auth:sanctum');
@@ -45,6 +45,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
     Route::get('projectTasks', [TaskController::class, 'projectTasks'])->middleware('auth:sanctum');
-    Route::post('assignEmployee', [TaskController::class, 'assignEmployee'])->middleware(['auth:sanctum', 'isAdmin']);;
+    Route::post('assignEmployee', [TaskController::class, 'assignEmployee'])->middleware(['auth:sanctum', 'isAdmin']);
     Route::post('completeTask', [TaskController::class, 'completeTask'])->middleware('auth:sanctum');
 });

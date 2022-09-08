@@ -6,24 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Passport\RefreshToken;
-use Laravel\Passport\Token;
 
-use Laravel\Passport\HasApiTokens;
+use Throwable;
 
 class AuthController extends Controller
 {
     /**
      * Store a newly created user in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function createUser(Request $request)
+    public function createUser(Request $request): JsonResponse
     {
         try {
             //Validated
@@ -57,7 +57,7 @@ class AuthController extends Controller
                 'message' => 'User Created Successfully',
                 // 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -68,14 +68,14 @@ class AuthController extends Controller
     /**
      * add new user as employee to the user who logged in.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
 
-    public function addEmployee(Request $request)
+    public function addEmployee(Request $request): JsonResponse
     {
         try {
-            if (count(Project::where('supervisorId', auth()->id())) != 0) {
+            if (Project::where('supervisorId', auth()->id())) {
 
                 //Validated
                 $validateUser = Validator::make(
@@ -114,7 +114,7 @@ class AuthController extends Controller
                     'message' => "you don't have any project to add employee"
                 ]);
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -125,11 +125,11 @@ class AuthController extends Controller
     /**
      * log in to a user in database and create token.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
 
-    public function loginUser(Request $request)
+    public function loginUser(Request $request): JsonResponse
     {
         try {
             $validateUser = Validator::make(
@@ -163,20 +163,21 @@ class AuthController extends Controller
                 'message' => 'User Logged In Successfully',
                 'token' => $token
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
     }
+
     /**
      * log out the user by deleting the token .
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse|bool
      */
-    public function logoutUser(Request $request)
+    public function logoutUser(Request $request): JsonResponse|bool
     {
         $user = $request->user();
         if (!$user) {

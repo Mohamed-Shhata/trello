@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
 
         $this->call(UserSeeder::class);
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaskSeeder::class);
         $projects = Project::all();
         foreach ($projects as $project) {
-            $countOfCompletedTask = count(Task::where('projectId', $project->id)->where('isCompleted', 1)->get());
+            $countOfCompletedTask = count(Task::where('project_id', $project->id)->where('isCompleted', 1)->get());
             Project::where('id', $project->id)->update(array('numberOfCompletedTasks' => $countOfCompletedTask));
         }
     }

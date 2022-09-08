@@ -10,16 +10,18 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the tasks to authenticated user that is is supervisor in or employee.
+     * Display a listing of the tasks to authenticated user that is supervisor in or employee.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $userId = auth()->id();
         //tasks as supervisor
@@ -28,7 +30,7 @@ class TaskController extends Controller
         $counter = 0;
 
         foreach ($projectsAsSupervisor as $project) {
-            $task = Task::where('projectId', $project->id)->get();
+            $task = Task::where('project_id', $project->id)->get();
             $tasks[$counter] = $task;
             $counter++;
         }
@@ -38,7 +40,7 @@ class TaskController extends Controller
         foreach ($employees  as $employee) {
             $projects = Project::where("supervisorId",  $employee)->get();
             foreach ($projects as $project) {
-                $task = Task::where('projectId', $project->id)->get();
+                $task = Task::where('project_id', $project->id)->get();
                 $tasks[$counter] = $task;
                 $counter++;
             }
@@ -47,32 +49,32 @@ class TaskController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'you have no tasks',
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => true,
                 'tasks' => $tasks,
-            ], 200);
+            ]);
         }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create()
-    {
-        //
-    }
+//    public function create()
+//    {
+//        //
+//    }
 
     /**
      * Store a newly created task in storage.
      *
-     * @param  \App\Http\Requests\StoreTaskRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreTaskRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request): JsonResponse
     {
         $projectId = $request->projectId;
         $projectSupervisorId = Project::findOrFail($projectId)->supervisorId;
@@ -83,13 +85,13 @@ class TaskController extends Controller
                 // 'complexity' => $request->complexity,
                 'description' => $request->description,
                 'employeeId' => NULL,
-                'projectId' => $request->projectId,
+                'project_id' => $request->projectId,
             ]);
             return response()->json([
                 'status' => true,
                 'message' => "Project Created successfully!",
                 'Project' => $Project,
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,
@@ -100,19 +102,19 @@ class TaskController extends Controller
     /**
      * show all tasks in a specific project
      *
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return JsonResponse
      */
-    public function projectTasks()
+    public function projectTasks(): JsonResponse
     {
         $id = $_GET['id'];
 
-        if (count(Task::select('*')->where("projectId",  $id)->get())) {
-            $tasks = Task::select('*')->where('projectId', '=', $id)->get();
+        if (count(Task::where("project_id",  $id)->get())) {
+            $tasks = Task::where('project_id', '=', $id)->get();
             return response()->json([
                 'status' => true,
                 'Project' => $tasks,
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,
@@ -122,15 +124,15 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified specific task if you are autherized to get.
+     * Display the specified specific task if you are authorized to get.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param Task $task
+     * @return JsonResponse
      */
-    public function show(Task $task)
+    public function show(Task $task): JsonResponse
     {
         $taskId = $task->id;
-        $projectId = Task::Where('id', $taskId)->first()->projectId;
+        $projectId = Task::Where('id', $taskId)->first()->project_id;
         if ($projectId) {
             $userId = auth()->id();
 
@@ -141,38 +143,38 @@ class TaskController extends Controller
                 return response()->json([
                     'status' => true,
                     'Project' => $task,
-                ], 200);
+                ]);
             }
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => "this task doesn't exist.",
-
-            ], 404);
         }
+        return response()->json([
+            'status' => false,
+            'message' => "this task doesn't exist.",
+
+        ], 404);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param Task $task
+     * @return Response
      */
-    public function edit(Task $task)
-    {
-        //
-    }
+//    public function edit(Task $task)
+//    {
+//        //
+//    }
 
     /**
-     * Update the specified task in storage if you are autherized to edit.
+     * Update the specified task in storage if you are authorized to edit.
      *
-     * @param  \App\Http\Requests\UpdateTaskRequest  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param UpdateTaskRequest $request
+     * @param Task $task
+     * @return JsonResponse
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $projectId = Task::Where('id', $task->id)->first()->projectId;
+        $projectId = Task::Where('id', $task->id)->first()->project_id;
         $projectSupervisorId = Project::findOrFail($projectId)->supervisorId;
 
         if ($projectSupervisorId != NULL && $projectSupervisorId == auth()->id()) {
@@ -182,7 +184,7 @@ class TaskController extends Controller
                 'status' => true,
                 'message' => "Task Updated successfully!",
                 'project' => $task,
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,
@@ -194,12 +196,12 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param Task $task
+     * @return JsonResponse
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): JsonResponse
     {
-        $projectId = Task::Where('id', $task->id)->first()->projectId;
+        $projectId = Task::Where('id', $task->id)->first()->project_id;
         $projectSupervisorId = Project::findOrFail($projectId)->supervisorId;
 
         if ($projectSupervisorId != NULL && $projectSupervisorId == auth()->id()) {
@@ -207,7 +209,7 @@ class TaskController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => "Task Deleted successfully!",
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,
@@ -217,18 +219,18 @@ class TaskController extends Controller
     }
 
     /**
-     * assignEmployee to task  if you are autherized to edit.
+     * assignEmployee to task  if you are authorized to edit.
      *
-     * @param  \App\Http\Requests\AssignEmployeeRequest  $request
-     * 
-     * @return \Illuminate\Http\Response
+     * @param AssignEmployeeRequest $request
+     *
+     * @return JsonResponse
      */
-    public function assignEmployee(AssignEmployeeRequest $request)
+    public function assignEmployee(AssignEmployeeRequest $request): JsonResponse
     {
         $taskId = $request->taskId;
         $employeeId = $request->employeeId;
 
-        $projectId = Task::Where('id', $taskId)->first()->projectId;
+        $projectId = Task::Where('id', $taskId)->first()->project_id;
 
         $projectSupervisorId = Project::where('id', $projectId)->first()->supervisorId;
 
@@ -236,11 +238,7 @@ class TaskController extends Controller
         if (count($isId) == 0) {
             return response()->json([
                 'status' => false,
-                'message' => "unvalid employee can't find employee with id =$employeeId",
-                'sd' => $isId,
-                'ewged' => $projectSupervisorId,
-                'sdg' => $projectId,
-                'task' => $taskId
+                'message' => "invalid employee can't find employee with id =$employeeId",
             ], 400);
         }
 
@@ -250,15 +248,13 @@ class TaskController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => "can't update completed tasks",
-
                 ]);
             }
             Task::where('id', $taskId)->update(array('employeeId' => $employeeId));
             return response()->json([
                 'status' => true,
                 'message' => "employee assigned to Task successfully!",
-
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,
@@ -269,14 +265,14 @@ class TaskController extends Controller
     }
 
     /**
-     * CompleteTaskRequest task to be done if you are autherized to submit.
+     * CompleteTaskRequest task to be done if you are authorized to submit.
      *
-     * @param  \App\Http\Requests\CompleteTaskRequest  $request
-     * 
-     * @return \Illuminate\Http\Response
+     * @param CompleteTaskRequest $request
+     *
+     * @return JsonResponse
      */
 
-    public function completeTask(CompleteTaskRequest $request)
+    public function completeTask(CompleteTaskRequest $request): JsonResponse
     {
         $taskId = $request->taskId;
 
@@ -292,7 +288,7 @@ class TaskController extends Controller
                 ]);
             }
             Task::where('id', $taskId)->update(array('isCompleted' => 1));
-            $projectId = Task::Where('id', $taskId)->first()->projectId;
+            $projectId = Task::Where('id', $taskId)->first()->project_id;
             $project = Project::Where('id', $projectId)->first();
 
 
@@ -302,7 +298,7 @@ class TaskController extends Controller
                 'status' => true,
                 'message' => "Task is completed successfully!",
 
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => false,

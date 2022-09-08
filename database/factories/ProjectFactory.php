@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
+ * @extends Factory<Project>
  */
 class ProjectFactory extends Factory
 {
@@ -16,7 +17,7 @@ class ProjectFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         $arr = array('easy', 'medium', 'hard');
         return [
